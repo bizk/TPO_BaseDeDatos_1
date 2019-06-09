@@ -15,8 +15,9 @@ ALTER TABLE Medicos
     ADD CONSTRAINT regla_Medicos_sexo CHECK (Sexo IN ('f','m'));
 
 --Regla fecha de estudio // En posterior no seria un mes despues?
+ALTER TABLE Registros DROP CONSTRAINT regla_Registros_fechaEstudio
 ALTER TABLE Registros
-	add constraint regla_Registros_fechaEstudio CHECK ( datediff(dd,Fecha,getdate())>1 AND abs(datediff(dd,Fecha,getdate())-30)<31)
+	add constraint regla_Registros_fechaEstudio CHECK ( datediff(wk,Fecha,getdate())>=-4 AND abs(datediff(wk,Fecha,getdate()))<=4)
 
 --Regla fecha de nacimiento(es el unico que no se si esta bien)
 ALTER TABLE Pacientes 
