@@ -15,21 +15,22 @@ ALTER TABLE Medicos
     ADD CONSTRAINT regla_Medicos_sexo CHECK (Sexo IN ('f','m'));
 
 --Regla fecha de estudio // En posterior no seria un mes despues?
-ALTER TABLE Registros DROP CONSTRAINT regla_Registros_fechaEstudio
 ALTER TABLE Registros
-	add constraint regla_Registros_fechaEstudio CHECK ( datediff(wk,Fecha,getdate())>=-4 AND abs(datediff(wk,Fecha,getdate()))<=4)
+	add constraint regla_Registros_fechaEstudio CHECK (abs(datediff(wk,Fecha,getdate()))<4)
 
 --Regla fecha de nacimiento(es el unico que no se si esta bien)
 ALTER TABLE Pacientes 
  ADD CONSTRAINT regla_Pacientes_Nacimiento CHECK( 21<datediff(yy,nacimiento, getdate()) AND datediff(yy,nacimiento, getdate())<80);                                                              
+ALTER TABLE Medicos
+ ADD CONSTRAINT regla_Medicos_Nacimiento CHECK( 21<datediff(yy,Nacimiento, getdate()) AND datediff(yy,Nacimiento, getdate())<80);                                                              
 
 --Regla NroPlan
 ALTER TABLE Planes
-    ADD CONSTRAINT check_Plan_NroPlan CHECK (NroPlan <= 12);
+    ADD CONSTRAINT check_Plan_NroPlan CHECK (NroPlan <= 12 AND NroPlan >= 0);
 ALTER TABLE Afiliados
-    ADD CONSTRAINT check_Afiliados_NroPlan CHECK (NroPlan <= 12);
+    ADD CONSTRAINT check_Afiliados_NroPlan CHECK (NroPlan <= 12 AND NroPlan >= 0);
 ALTER TABLE Coberturas
-    ADD CONSTRAINT check_Coberturas_NroPlan CHECK (NroPlan <= 12)
+    ADD CONSTRAINT check_Coberturas_NroPlan CHECK (NroPlan <= 12 AND NroPlan >= 0);
      
 --Regla Precio
 ALTER TABLE Precios
@@ -41,5 +42,5 @@ ALTER TABLE Coberturas
                                                               
 --Regla estado
 ALTER TABLE Medicos
-    ADD CONSTRAINT check_Medicos_Activo CHECK (Activo IN (1,0));
+    ADD CONSTRAINT check_Medicos_Activo CHECK (Activo <= 1 AND Activo >= 0);
 GO

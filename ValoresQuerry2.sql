@@ -4,10 +4,11 @@ INSERT INTO Especialidades (Descripcion) VALUES ('Psiquiatria');
 INSERT INTO Especialidades (Descripcion) VALUES ('Oftalmologia');
 INSERT INTO Especialidades (Descripcion) VALUES ('Cirugia');
 INSERT INTO Especialidades (Descripcion) VALUES ('Terapia intensiva');
+INSERT INTO Especialidades (Descripcion) VALUES ('Oncologia');
 
 INSERT INTO Medicos (Matricula, Apellido, Nombre, Sexo, Nacimiento, Activo) VALUES (000011,'Lopez','Anibal','m','1/3/1980',1);
 INSERT INTO Medicos (Matricula, Apellido, Nombre, Sexo, Nacimiento, Activo) VALUES (044025,'Castillo','Daniela','f','7/6/1979',1);
-INSERT INTO Medicos (Matricula, Apellido, Nombre, Sexo, Nacimiento, Activo) VALUES (485920,'Pepe','Santiago','m','1/2/1929',0);
+INSERT INTO Medicos (Matricula, Apellido, Nombre, Sexo, Nacimiento, Activo) VALUES (485920,'Pepe','Santiago','m','1/2/1956',0);
 INSERT INTO Medicos (Matricula, Apellido, Nombre, Sexo, Nacimiento, Activo) VALUES (075001,'Kilmer','Paulina','f','8/22/1989',1);
 INSERT INTO Medicos (Matricula, Apellido, Nombre, Sexo, Nacimiento, Activo) VALUES (000781,'Ramirez','Julia','f','1/2/1942',0);
 
@@ -16,6 +17,7 @@ INSERT INTO Estudios (Descripcion) VALUES ('Ergometria.');
 INSERT INTO Estudios (Descripcion) VALUES ('Antropometria.');
 INSERT INTO Estudios (Descripcion) VALUES ('Tomografia craneal');
 INSERT INTO Estudios (Descripcion) VALUES ('Ecografia abdominal');
+INSERT INTO Estudios (Descripcion) VALUES ('Analisis de Sangre basico');
 INSERT INTO Estudios (Descripcion) VALUES ('Analisis de Sangre completo');
 INSERT INTO Estudios (Descripcion) VALUES ('Transfusion de plaquetas.');
 INSERT INTO Estudios (Descripcion) VALUES ('Consulta.');
@@ -41,7 +43,6 @@ INSERT INTO Pacientes (DNI, Apellido, Nombre, Sexo, Nacimiento, Telefono) VALUES
 INSERT INTO Pacientes (DNI, Apellido, Nombre, Sexo, Nacimiento, Telefono) VALUES (12878798,'Carolio','Carolina', 'f','12/7/1949','+54344875379');
 INSERT INTO Pacientes (DNI, Apellido, Nombre, Sexo, Nacimiento, Telefono) VALUES (12751498,'Maggi','Sulivan', 'm','12/2/1987','+5435498879');
 INSERT INTO Pacientes (DNI, Apellido, Nombre, Sexo, Nacimiento, Telefono) VALUES (75345698,'Grande','Ariana', 'f','1/8/1979','+5435806639');
---54
 INSERT INTO Pacientes (DNI, Apellido, Nombre, Sexo, Nacimiento, Telefono) VALUES (11111111,'Stark','Antonio', 'm','1/10/1990','1241234214');
 INSERT INTO Pacientes (DNI, Apellido, Nombre, Sexo, Nacimiento, Telefono) VALUES (11112222,'Parque','Pedro', 'm','3/17/1985','+557457547');
 INSERT INTO Pacientes (DNI, Apellido, Nombre, Sexo, Nacimiento, Telefono) VALUES (11113333,'Magno','Alejandro', 'm','9/9/1983','+543543464');
@@ -50,9 +51,14 @@ INSERT INTO Pacientes (DNI, Apellido, Nombre, Sexo, Nacimiento, Telefono) VALUES
 INSERT INTO Pacientes (DNI, Apellido, Nombre, Sexo, Nacimiento, Telefono) VALUES (11119999,'Li','Zu', 'f','7/1/1979','+5434356346');
 
 INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (6,000011)
+INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (1,000011)
+INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (2,000011)
 INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (1,044025)
 INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (2,485920)
+INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (3,485920)
 INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (3,075001)
+INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (4,075001)
+INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (3,000781)
 INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (4,000781)
 INSERT INTO EspeMedi (IdEspecialidad, Matricula) VALUES (5,000781)
 
@@ -126,17 +132,22 @@ INSERT INTO Precios (IdEstudio,IdInstituto,Precio) VALUES (8,5,250)
 --En la tabla coberturas falta el campo "coberturas", lo cuento como un INTEGER con valores del 0 al 100, representando porcentaje
 INSERT INTO Coberturas(IdEstudio,Sigla,NroPlan,Cobertura) VALUES (7,'GA',1,80)
 INSERT INTO Coberturas(IdEstudio,Sigla,NroPlan,Cobertura) VALUES (3,'GA',2,100)
+INSERT INTO Coberturas(IdEstudio,Sigla,NroPlan,Cobertura) VALUES (2,'GA',1,25)
 INSERT INTO Coberturas(IdEstudio,Sigla,NroPlan,Cobertura) VALUES (1,'GA',3,40)
 INSERT INTO Coberturas(IdEstudio,Sigla,NroPlan,Cobertura) VALUES (2,'OC',1,75)
 INSERT INTO Coberturas(IdEstudio,Sigla,NroPlan,Cobertura) VALUES (4,'OM',2,35)
 INSERT INTO Coberturas(IdEstudio,Sigla,NroPlan,Cobertura) VALUES (3,'OC',1,10)
+INSERT INTO Coberturas(IdEstudio,Sigla,NroPlan,Cobertura) VALUES (1,'OM',1,15)
+INSERT INTO Coberturas(IdEstudio,Sigla,NroPlan,Cobertura) VALUES (2,'SW',1,10)
+INSERT INTO Coberturas(IdEstudio,Sigla,NroPlan,Cobertura) VALUES (2,'OS',2,45)
+
 
 --Voy a dejar esto por un momento porque no sé si los planes tienen un número único en toda la tabla o sólo en los planes de la obra social.
 --Pasa lo mismo con la tabla AFILIADOS
 INSERT INTO Afiliados(DNI,Sigla,NroPlan) VALUES(12347778,'IN',1)
 INSERT INTO Afiliados(DNI,Sigla,NroPlan) VALUES(12347778,'SW',3)
 INSERT INTO Afiliados(DNI,Sigla,NroPlan) VALUES(12751498,'OM',1)
-INSERT INTO Afiliados(DNI,Sigla,NroPlan) VALUES(40415868,'OS',2)
+INSERT INTO Afiliados(DNI,Sigla,NroPlan) VALUES(40415868,'GA',2)
 INSERT INTO Afiliados(DNI,Sigla,NroPlan) VALUES(75345698,'SW',1)
 
 
@@ -145,8 +156,8 @@ INSERT INTO Afiliados(DNI,Sigla,NroPlan) VALUES(75345698,'SW',1)
 --Habría que hacer un registro para cada paciente para que sea logica su presencia en el sistema, pero no es fundamental
 INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('05/21/2019', 15151515,8,1,000011,'OS')
 INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('05/20/2019', 12347778,8,2,044025,'OC')
-INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('10/05/2019', 40415868,1,2,781,'GA')
-INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('01/03/2005', 15151515,3,3,000011,'OS')
+INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('06/05/2019', 40415868,1,2,781,'GA')
+INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('06/29/2019', 15151515,3,3,000011,'OS')
 INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('06/01/2019', 11119999,4,1,000011,'OS')
 INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('06/02/2019', 11112222,1,2,044025,'OC')
 INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('06/01/2019', 40415868,2,4,781,'GA')
@@ -154,3 +165,4 @@ INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALU
 INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('06/05/2019', 11113333,3,3,781,'OS')
 INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('05/29/2019', 11114444,3,3,044025,'GA')
 INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('05/24/2019', 11115555,3,3,044025,'GA')
+INSERT INTO Registros (Fecha, DNI, IdEstudio,IdInstituto, Matricula, Sigla) VALUES ('06/27/2018', 11119999,3,3,781,'GA')

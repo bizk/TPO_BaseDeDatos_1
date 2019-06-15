@@ -20,31 +20,28 @@ CREATE TABLE Estudios(
 CREATE TABLE Institutos (
     IdInstituto INT IDENTITY,
     RazonSocial VARCHAR(100) NOT NULL,
-    Vigente BIT NOT NULL,
+    Vigente BIT,
     CONSTRAINT Institutos_pk PRIMARY KEY (IdInstituto));
 CREATE TABLE ObraSocial(
     Sigla CHAR(2) NOT NULL,
     Nombre VARCHAR(50) NOT NULL,
     Categoria CHAR(2),
     CONSTRAINT ObraSocial_pk PRIMARY KEY (Sigla));
-CREATE TABLE Pacientes(
+CREATE TABLE Pacientes( 
     DNI INT NOT NULL,
     Apellido VARCHAR(50) NOT null,
     Nombre VARCHAR(100) NOT null,
     Sexo CHAR(1) NOT null,
     Nacimiento DATE NOT null,
     Telefono VARCHAR(15),
-    CONSTRAINT Pacientes_pk PRIMARY KEY (DNI)
-);
+    CONSTRAINT Pacientes_pk PRIMARY KEY (DNI));
 
 CREATE TABLE EspeMedi (
     IdEspecialidad smallint NOT NULL,
-    Matricula int NOT NULL
-);
+    Matricula int NOT NULL);
 CREATE TABLE EstuEspe (
     IdEstudio INT NOT NULL,
-    IdEspecialidad SMALLINT NOT NULL,
-);
+    IdEspecialidad SMALLINT NOT NULL,);
 CREATE TABLE Precios (
     IdEstudio INT NOT NULL,
     IdInstituto INT NOT NULL,
@@ -69,8 +66,7 @@ CREATE TABLE Afiliados(
     DNI INT NOT NULL,
     Sigla CHAR(2) NOT NULL,
     NroPlan SMALLINT NOT NULL,
-    CONSTRAINT Afiliados_pk PRIMARY KEY (IdAfiliado)
-);
+    CONSTRAINT Afiliados_pk PRIMARY KEY (IdAfiliado)    );
 CREATE TABLE Registros(
     IdRegistro INT IDENTITY,
     Fecha DATE,

@@ -11,21 +11,30 @@ SELECT Medicos.Matricula, Medicos.Nombre, Medicos.Apellido, Medicos.Sexo
 FROM Medicos WHERE Medicos.Activo=1
 GO
 --3 :) Estara bien? dos pacientes pueden tener la 
+--Muesra a aquellos que no tienne nro de afiliado
 CREATE VIEW vw_pacientes AS 
-SELECT Pacientes.DNI, Pacientes.Nombre AS nombrePaciente, Pacientes.Apellido, Pacientes.Sexo, Pacientes.Nacimiento, ObraSocial.Nombre AS nombreObraSocial, Afiliados.NroPlan,Afiliados.IdAfiliado
-FROM ((Pacientes JOIN Afiliados ON Pacientes.DNI=Afiliados.DNI) JOIN ObraSocial ON ObraSocial.Sigla=Afiliados.Sigla)
+SELECT Pacientes.DNI, Pacientes.Nombre AS nombrePaciente, Pacientes.Apellido,
+     Pacientes.Sexo, Pacientes.Nacimiento, ObraSocial.Nombre AS nombreObraSocial,
+    Afiliados.NroPlan,Planes.NombrePLan,Afiliados.IdAfiliado
+FROM (((Pacientes LEFT JOIN Afiliados ON Pacientes.DNI=Afiliados.DNI)
+     LEFT JOIN ObraSocial ON ObraSocial.Sigla=Afiliados.Sigla)
+     LEFT JOIN Planes ON (Afiliados.NroPlan = Planes.NroPlan AND Afiliados.Sigla = Planes.Sigla))
+ORDER BY Pacientes.DNI
 GO
-
+SELECT * FROM Pacientes
 --4 :)
 CREATE VIEW vw_pacientes_sin_cobertura AS
 SELECT Pacientes.DNI, Pacientes.Nombre, Pacientes.Apellido, Pacientes.Sexo, Pacientes.Nacimiento
 FROM Pacientes LEFT OUTER JOIN Afiliados ON Pacientes.DNI = Afiliados.DNI
+WHERE Afiliados.IdAfiliado IS NULL
+GROUP BY Pacientes.DNI, Pacientes.Nombre, Pacientes.Apellido, Pacientes.Sexo,Pacientes.Nacimiento
 GO
 
 --5 :)
 CREATE VIEW vw_total_medicos_sin_especialidades (Sexo, Cantidad) AS
 SELECT Medicos.Sexo, Count(Medicos.Matricula)
-FROM Medicos LEFT OUTER JOIN EspeMedi ON Medicos.Matricula=EspeMedi.Matricula
+FROM Medicos LEFT JOIN EspeMedi ON Medicos.Matricula=EspeMedi.Matricula
+WHERE IdEspecialidad IS NULL
 GROUP BY Medicos.Sexo
 GO
 
@@ -56,7 +65,8 @@ GO
 --9 :)
 CREATE VIEW vw_estudios_sin_cobertura AS
 Select Estudios.IdEstudio, Estudios.Descripcion
-FROM Estudios LEFT OUTER JOIN Coberturas ON Estudios.IdEstudio = Coberturas.IdEstudio
+FROM Estudios LEFT JOIN Coberturas ON Estudios.IdEstudio = Coberturas.IdEstudio
+WHERE Coberturas.IdEstudio IS NULL
 GO
 
 --10 :)
@@ -70,18 +80,19 @@ GO
 -- También verificar si el número de plan modifica algo (Creo que no)
 CREATE VIEW vw_tabla_de_precios AS
 SELECT Estudios.Descripcion, ObraSocial.Nombre AS NombObraSocial, 
-Planes.NombrePlan, Instituto.Descripcion AS Instituto, Precios.Precio AS PrecioEstudio, 
+Planes.NombrePlan, Institutos.RazonSocial AS Instituto, Precios.Precio AS PrecioEstudio, 
 Coberturas.Cobertura AS PorcentajeCubierto,  (Coberturas.Cobertura*100)/Precios.Precio AS MontoCubierto
 FROM (((((Estudios JOIN Coberturas ON Estudios.IdEstudio = Coberturas.IdEstudio) 
 JOIN ObraSocial ON Coberturas.Sigla=ObraSocial.Sigla)
-JOIN Planes ON Planes.IdPlan = Coberturas.IdPlan)
+JOIN Planes ON Planes.NroPlan = Coberturas.NroPlan)
 JOIN Precios ON Precios.IdEstudio = Estudios.IdEstudio)
 JOIN Institutos ON Precios.IdInstituto = Institutos.IdInstituto)
 GO
 
 --12 :)
 CREATE VIEW vw_estudios_a_prepagas AS 
-SELECT Registros.IdEstudio, Estudios.Descripcion AS NombreEstudio, ObraSocial.Nombre AS Prepaga
+SELECT Registros.IdEstudio, Estudios.Descripcion AS NombreEstudio,
+     ObraSocial.Nombre AS Prepaga, Registros.Fecha
 FROM ((Registros JOIN Estudios ON Registros.IdEstudio = Estudios.IdEstudio)
 JOIN ObraSocial ON Registros.Sigla=ObraSocial.Sigla)
 WHERE ObraSocial.Categoria = 'pp' AND abs(DateDiff(dd, Registros.Fecha,getDate())) <=45
@@ -92,7 +103,6 @@ CREATE VIEW vw_estudios_por_mes AS
 SELECT Estudios.Descripcion AS Estudio, Pacientes.Sexo, Count(Estudios.IdEstudio) AS CantRealizados, DATENAME(m, Registros.Fecha) AS Mes
 FROM ((Pacientes JOIN Registros ON Pacientes.DNI = Registros.DNI) 
 JOIN Estudios ON Estudios.IdEstudio = Registros.IdEstudio)
-WHERE abs(DateDiff(y, Registros.Fecha, getDate())) < 365
 GROUP BY Pacientes.Sexo, Estudios.Descripcion, DATENAME(m, Registros.Fecha)
 HAVING COUNT(Estudios.Descripcion) >= 1
 GO
@@ -100,6 +110,6 @@ GO
 CREATE VIEW  vw_estudios_por_instituto AS
 SELECT Registros.IdInstituto, Institutos.RazonSocial AS Instituto, Count(Registros.IdInstituto) AS CantEstudios
 FROM Registros JOIN Institutos ON Registros.IdInstituto = Institutos.IdInstituto
-WHERE abs(DateDiff(dd,Registros.Fecha, getDate()))<15
+WHERE DateDiff(dd,Registros.Fecha, getDate())<15
 GROUP BY datepart(wk, registros.Fecha), Registros.IdINstituto, Institutos.RazonSocial
 GO
